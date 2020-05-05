@@ -1,0 +1,92 @@
+//we ca do this problem in o(log n ) time by using segment tree concept.
+
+import java.util.*;
+public class Main
+{
+	public static void main(String[] args) {
+		 Scanner sc=new Scanner (System.in);
+		 int t=sc.nextInt();
+		 while(t-->0){
+		     int n=sc.nextInt();
+		     int arr[]=new int[n+1];
+		     for(int i=1;i<n+1;i++){
+		         arr[i]=sc.nextInt();
+		     }
+		     int maxTree[] =new int[4*n+1];
+		     int minTree[] =new int[4*n+1];
+		     int s=1;
+		     int e=n;
+		    buildMin(arr,s,e,minTree,1);
+		    buildMax(arr,s,e,maxTree,1);
+		     int q= sc.nextInt();
+		     while(q-->0){
+		         int qs= sc.nextInt();
+		         int qe=sc.nextInt();
+		         
+		        if((rangeMax(maxTree,qs,qe,1,n,1) -rangeMin(minTree,qs,qe,1,n,1)) == (qe - qs)){
+		          System.out.println("Yes");
+		        }
+		        else {
+		        System.out.println("No");
+		     }
+		     }
+		 }
+	}
+	static void buildMin(int arr[],int s,int e,int minTree[],int treeNode){
+    if(s==e)
+    {
+        minTree[treeNode]=arr[s];
+        return;
+    }
+    int mid=(s+e)/2;
+    buildMin(arr, s,mid,minTree,2*treeNode);
+    buildMin(arr, mid+1,e,minTree,2*treeNode+1);
+    minTree[treeNode]=Math.min(minTree[2*treeNode],minTree[2*treeNode+1]);
+	}
+	static int rangeMin(int minTree[],int qs,int qe,int s,int e,int index){
+	    int mid=(s+e)/2;
+	    if(qe<s || qs>e)
+	    return Integer.MAX_VALUE;
+	    
+	    if(qs<=s && qe>=e)
+	    return minTree[index];
+	    
+	    int leftans = rangeMin(minTree,qs,qe,s, mid,2*index);
+	    int rightans = rangeMin(minTree,qs,qe,mid+1,e,2*index+1);
+	    
+	    return(Math.min(leftans,rightans));
+	    
+	    
+	    
+	}
+		static void buildMax(int arr[],int s,int e,int maxTree[],int treeNode){
+    if(s==e)
+    {
+        maxTree[treeNode]=arr[s];
+        return;
+    }
+    int mid=(s+e)/2;
+    buildMax(arr, s,mid,maxTree,2*treeNode);
+    buildMax(arr, mid+1,e,maxTree,2*treeNode+1);
+    maxTree[treeNode]=Math.max(maxTree[2*treeNode],maxTree[2*treeNode+1]);
+	}
+	static int rangeMax(int maxTree[],int qs,int qe,int s,int e,int index){
+	    int mid=(s+e)/2;
+	    if(qe<s || qs>e)
+	    return Integer.MIN_VALUE;
+	    
+	    if(qs<=s && qe>=e)
+	    return maxTree[index];
+	    
+	    int leftans = rangeMax(maxTree,qs,qe,s, mid,2*index);
+	    int rightans = rangeMax(maxTree,qs,qe,mid+1,e,2*index+1);
+	    
+	    return(Math.max(leftans,rightans));
+	    
+	    
+	    
+	}
+ 
+	
+	
+}
